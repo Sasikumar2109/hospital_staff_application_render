@@ -52,6 +52,11 @@ else:
     photo9 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo9_path}"
     photo10 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo10_path}"
 
+def image_url_to_base64(url: str):
+    response = requests.get(url)
+    response.raise_for_status()
+    return base64.b64encode(response.content).decode()
+
 if machine=='local':
     logo_path = logo_path
     hospital_symbol_path = hospital_symbol_path
@@ -60,8 +65,8 @@ if machine=='local':
 else:
     logo_path = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{logo_path}"
     hospital_symbol_path = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{hospital_symbol_path}"
-    logo_base64 = base64.b64encode(requests.get(logo_path).content).decode()
-    symbol_base64 = base64.b64encode(requests.get(hospital_symbol_path).content).decode()
+    logo_base64 = image_url_to_base64(logo_path)
+    symbol_base64 = image_url_to_base64(hospital_symbol_path)
 
 aws_access_key = os.getenv("AWS_ACCESS_KEY")
 aws_secret_key = os.getenv("AWS_SECRECT_ACCESS")
