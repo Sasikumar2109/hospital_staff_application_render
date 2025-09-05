@@ -50,8 +50,8 @@ sub_term_path = constants.sub_term_path
 # images loading 
 
 if machine!='local':
-    logo_path = "https://storage.googleapis.com/hospital-staff-bucket-mrb/icons/logo.png" #constants.logo_base64
-    hospital_symbol_path = "https://storage.googleapis.com/hospital-staff-bucket-mrb/icons/hospital_symbol.png" #constants.symbol_base64
+    logo_path = constants.logo_path
+    hospital_symbol_path = constants.symbol_base64
 
     logo_base64 = base64.b64encode(requests.get(logo_path).content).decode()
     symbol_base64 = base64.b64encode(requests.get(hospital_symbol_path).content).decode()
