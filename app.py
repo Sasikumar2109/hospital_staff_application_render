@@ -48,10 +48,12 @@ sub_aadhar_path =  constants.sub_aadhar_path
 sub_term_path = constants.sub_term_path
 
 # images loading 
+logo_path = 'data/icons/logo.png'
+hospital_symbol_path = 'data/icons/hospital_symbol.png'
 
 if machine!='local':
-    logo_path = constants.logo_path
-    hospital_symbol_path = constants.symbol_base64
+    logo_path = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{logo_path}"
+    hospital_symbol_path = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{hospital_symbol_path}"
 
     logo_base64 = base64.b64encode(requests.get(logo_path).content).decode()
     symbol_base64 = base64.b64encode(requests.get(hospital_symbol_path).content).decode()
