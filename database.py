@@ -24,8 +24,8 @@ db_url = os.getenv("DB_URL")
 
 # connecting with database
 
-if machine=='local':
-    def get_connection():
+def get_connection():
+    if machine=='local':
         conn = psycopg2.connect(
             dbname=db_name,
             user=db_user,
@@ -34,9 +34,9 @@ if machine=='local':
             port=db_port,
             cursor_factory=RealDictCursor
         )
-        return conn
-else:
-    conn = psycopg2.connect(db_url)
+    else:
+        conn = psycopg2.connect(db_url)
+    return conn
 
 # creating tables
 
