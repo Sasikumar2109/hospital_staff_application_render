@@ -8,6 +8,8 @@ import os
 from dotenv import load_dotenv
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from zoneinfo import ZoneInfo
+import pytz
 
 
 load_dotenv()
@@ -29,14 +31,12 @@ def verify_password(plain_password, hashed_password):
 
 def get_next_member_id():
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     year = datetime.datetime.now().year
     prefix = "582022"
     query = "SELECT member_id FROM users WHERE member_id LIKE ?"
     params = (f"{prefix}{year}%",)
+
     file_utils.execute_query(cursor=c,query=query,params=params,machine=machine)
     rows = c.fetchall()
     rows = file_utils.convert_to_dict(c,rows)
@@ -60,10 +60,8 @@ def create_user(name, dob, email, phone, password_hash, is_admin=False, signatur
     else:
         member_id = get_next_member_id()
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    
+    c = conn.cursor()
     try:
         query = '''INSERT INTO users (name, dob, email, phone, password_hash, is_admin, member_id, profile_status, signature_path)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
@@ -80,10 +78,7 @@ def create_user(name, dob, email, phone, password_hash, is_admin=False, signatur
 
 def get_user_by_email(email, is_admin=None):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     
     if is_admin is None:
         query = 'SELECT * FROM users WHERE email = ?'
@@ -102,11 +97,7 @@ def get_user_by_email(email, is_admin=None):
 
 def set_user_verified(email, is_admin=0):
     conn = get_connection()
-
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
 
     query = 'UPDATE users SET is_verified = 1 WHERE email = ? AND is_admin = ?'
     params = (email, is_admin)
@@ -116,10 +107,7 @@ def set_user_verified(email, is_admin=0):
 
 def set_user_password(email, password_hash, is_admin=0):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
 
     query = 'UPDATE users SET password_hash = ? WHERE email = ? AND is_admin = ?'
     params = (password_hash, email, is_admin)
@@ -129,19 +117,15 @@ def set_user_password(email, password_hash, is_admin=0):
 
 def update_user_profile(email, designation, phone, aadhaar, workplace, rnrm_doc_path, rnrm_number, emergency_contact, college, educational_qualification, gender, blood_group, address, profile_status=None, photo_path=None, aadhaar_doc_path=None, signature_path=None):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    
+    c = conn.cursor()
     now_str = None
     try:
-        from zoneinfo import ZoneInfo
-        import datetime
         now_str = datetime.datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')
     except ImportError:
-        import pytz
-        import datetime
+
         now_str = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')
+
     if profile_status is not None:
         if profile_status == 'pending':
             query = '''UPDATE users SET designation = ?, phone = ?, aadhaar = ?, workplace = ?, rnrm_doc_path = ?, rnrm_number = ?, emergency_contact = ?, college = ?,
@@ -165,10 +149,7 @@ def update_user_profile(email, designation, phone, aadhaar, workplace, rnrm_doc_
 
 def approve_user_profile(email, approver_email=None):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if approver_email:
         query = '''UPDATE users SET profile_status = 'approved', profile_approved_date = ?, approved_by = ? WHERE email = ? AND is_admin = 0'''
@@ -184,10 +165,7 @@ def approve_user_profile(email, approver_email=None):
 
 def update_signup_details(old_email, new_name, new_dob, new_email, new_phone):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     query = '''UPDATE users SET name = ?, dob = ?, email = ?, phone = ? WHERE email = ? AND is_admin = 0'''
     params = (new_name, new_dob, new_email, new_phone, old_email)
     file_utils.execute_query(cursor=c,query=query,params=params,machine=machine)
@@ -196,10 +174,7 @@ def update_signup_details(old_email, new_name, new_dob, new_email, new_phone):
 
 def is_profile_pending(email, is_admin=0):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     query = 'SELECT 1 FROM users WHERE email = ? AND is_admin = ? AND profile_status =?'
     params = (email, is_admin,'pending')
     file_utils.execute_query(cursor=c,query=query,params=params,machine=machine)

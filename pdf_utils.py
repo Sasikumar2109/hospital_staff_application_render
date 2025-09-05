@@ -16,12 +16,10 @@ import re
 from PyPDF2 import PdfMerger
 import file_utils
 import constants
+#from file_utils import get_image_reader
 
 def draw_id_card_front(c, x_offset, y_offset, width, height, name, designation, dob, phone, blood_group, email, photo_path, address, member_id=None, rnrm_number=None, issue_date=None, nurse_signature_path=None, auth_signature_path=None):
-    from datetime import datetime, timedelta
-    from reportlab.lib.pagesizes import mm
-    from reportlab.lib import colors
-    import os
+
     # Draw a white rounded rectangle as the card background for curved edges
     corner_radius = 5*mm
     card_x = x_offset

@@ -15,9 +15,6 @@ import io
 
 load_dotenv()
 
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GCS_CREDENTIALS")
-bucket_name = os.getenv("BUCKET_NAME")
 machine = os.getenv("MACHINE")
 
 def upload_file_to_gcs(bucket_name, file, destination_blob_name):
@@ -38,13 +35,12 @@ def upload_file(file_obj,doc_name,subfolder,type,user_id):
         return file_path
     else:
         file_path = f"{subfolder}/{type}_{user_id}_{doc_name}"
-        blob_path = upload_file_to_gcs(bucket_name, file_obj,file_path)
+        blob_path = None #upload_file_to_gcs(bucket_name, file_obj,file_path)
         return blob_path
     
 def execute_query(cursor,query,params=None,machine=None):
     if params:
-        if machine != 'local':
-            query = query.replace('?','%s')
+        query = query.replace('?','%s')
         cursor.execute(query,params)
     else:
         cursor.execute(query)
@@ -53,13 +49,7 @@ def convert_to_dict(cursor, rows):
     if not rows:
         result = []
     else:
-        if machine == 'local':
-            # sqlite returns rows as Row objects which are already dict-like
-            result = [dict(row) for row in rows] if isinstance(rows, list) else [dict(rows)]
-        else:
-            columns = [col[0] for col in cursor.description]
-            result = [dict(zip(columns, row)) for row in rows]
-
+        result = rows
     return result
 
 

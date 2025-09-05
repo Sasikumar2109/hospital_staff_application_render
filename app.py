@@ -41,12 +41,11 @@ machine = os.getenv("MACHINE")
 poppler_path = os.getenv("POPPLER")
 bucket_name = os.getenv("BUCKET_NAME")
 
-
 sub_sign_path = constants.sub_sign_path
 sub_photo_path =  constants.sub_photo_path
 sub_rnrm_path =  constants.sub_rnrm_path
 sub_aadhar_path =  constants.sub_aadhar_path
-sub_term_path = constants.sub_term_path 
+sub_term_path = constants.sub_term_path
 
 # images loading 
 
@@ -514,7 +513,6 @@ def signup_page():
                 st.session_state.signup_otp_loading = False
             else:
                 otp = otp_utils.generate_otp()
-                print(otp)
                 sent = otp_utils.send_otp_email(email, otp)
                 if sent:
                     otp_utils.store_otp(email, otp, 'signup')

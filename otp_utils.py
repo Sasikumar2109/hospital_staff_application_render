@@ -42,10 +42,7 @@ def send_otp_email(email, otp):
 
 def store_otp(email, otp, purpose):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     query = 'INSERT INTO otps (email, otp, purpose) VALUES (?, ?, ?)'
     params = (email, otp, purpose)
     file_utils.execute_query(cursor=c,query=query,params=params,machine=machine)
@@ -54,10 +51,7 @@ def store_otp(email, otp, purpose):
 
 def verify_otp(email, otp, purpose):
     conn = get_connection()
-    if machine=='local':
-        c = conn.cursor()
-    else:
-        c = conn.cursor()
+    c = conn.cursor()
     # Fetch only the most recent OTP for this email and purpose
 
     query = 'SELECT id, otp FROM otps WHERE email = ? AND purpose = ? ORDER BY id DESC LIMIT 1'

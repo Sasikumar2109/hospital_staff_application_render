@@ -15,4 +15,6 @@ hospital_staff.db/
 hospital-staff-application/
 client-cert.pem
 test_gcp.py/
-test.ipynb
+test.ipynb/
+working_file.ipynb
+.ipynb_checkpoints

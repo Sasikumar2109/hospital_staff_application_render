@@ -21,10 +21,10 @@ photo10_path = "data/optimized_association_photos/photo10.JPG"
 
 logo_path = 'data/icons/logo.png'
 hospital_symbol_path = 'data/icons/hospital_symbol.png'
-sub_sign_path = 'data/documents/signature'
-sub_photo_path = 'data/documents/photo'
-sub_rnrm_path = 'data/documents/rnrm'
-sub_aadhar_path = 'data/documents/aadhar'
+sub_sign_path = 'uploads/signature'
+sub_photo_path = 'uploads/photo'
+sub_rnrm_path = 'uploads/rnrm'
+sub_aadhar_path = 'uploads/aadhar'
 sub_term_path = 'data/documents/terms_and_conditions'
 
 
