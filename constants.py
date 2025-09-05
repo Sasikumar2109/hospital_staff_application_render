@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import base64
 import requests
+import boto3
 
 load_dotenv()
 
@@ -40,18 +41,16 @@ if machine=="local":
     photo9 = photo1_path
     photo10 = photo1_path
 else:
-    photo1 = f"https://storage.googleapis.com/{bucket_name}/{photo1_path}"
-    photo2 = f"https://storage.googleapis.com/{bucket_name}/{photo2_path}"
-    photo3 = f"https://storage.googleapis.com/{bucket_name}/{photo3_path}"
-    photo4 = f"https://storage.googleapis.com/{bucket_name}/{photo4_path}"
-    photo5 = f"https://storage.googleapis.com/{bucket_name}/{photo5_path}"
-    photo6 = f"https://storage.googleapis.com/{bucket_name}/{photo6_path}"
-    photo7 = f"https://storage.googleapis.com/{bucket_name}/{photo7_path}"
-    photo8 = f"https://storage.googleapis.com/{bucket_name}/{photo8_path}"
-    photo9 = f"https://storage.googleapis.com/{bucket_name}/{photo9_path}"
-    photo10 = f"https://storage.googleapis.com/{bucket_name}/{photo10_path}"
-
-
+    photo1 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo1_path}"
+    photo2 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo2_path}"
+    photo3 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo3_path}"
+    photo4 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo4_path}"
+    photo5 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo5_path}"
+    photo6 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo6_path}"
+    photo7 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo7_path}"
+    photo8 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo8_path}"
+    photo9 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo9_path}"
+    photo10 = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{photo10_path}"
 
 if machine=='local':
     logo_path = logo_path
@@ -59,7 +58,19 @@ if machine=='local':
     logo_base64 = base64.b64encode(open(logo_path, 'rb').read()).decode()
     symbol_base64 = base64.b64encode(open(hospital_symbol_path, 'rb').read()).decode()
 else:
-    logo_path = f"https://storage.googleapis.com/{bucket_name}/{logo_path}"
-    hospital_symbol_path = f"https://storage.googleapis.com/{bucket_name}/{hospital_symbol_path}"
+    logo_path = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{logo_path}"
+    hospital_symbol_path = f"https://mrb-association-files.s3.ap-south-1.amazonaws.com/{hospital_symbol_path}"
     logo_base64 = base64.b64encode(requests.get(logo_path).content).decode()
     symbol_base64 = base64.b64encode(requests.get(hospital_symbol_path).content).decode()
+
+aws_access_key = os.getenv("AWS_ACCESS_KEY")
+aws_secret_key = os.getenv("AWS_SECRECT_ACCESS")
+aws_region = os.getenv("AWS_REGION")
+bucket_name = os.getenv("S3_BUCKET_NAME")
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=aws_access_key,
+    aws_secret_access_key=aws_secret_key,
+    region_name=aws_region
+)

@@ -20,6 +20,7 @@ db_pw = os.getenv("DB_PASSWORD")
 db_name = os.getenv("DB_NAME")
 db_host = os.getenv("DB_HOST")
 db_port = os.getenv("DB_PORT")
+db_url = os.getenv("DB_URL")
 
 # connecting with database
 
@@ -35,7 +36,7 @@ if machine=='local':
         )
         return conn
 else:
-    pass
+    conn = psycopg2.connect(db_url)
 
 # creating tables
 

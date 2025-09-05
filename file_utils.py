@@ -11,11 +11,13 @@ import pdf_utils
 import time
 from reportlab.lib.utils import ImageReader
 import io
+import constants
 
 
 load_dotenv()
 
 machine = os.getenv("MACHINE")
+bucket_name = os.getenv("S3_BUCKET_NAME")
 
 def upload_file_to_gcs(bucket_name, file, destination_blob_name):
     storage_client = storage.Client()
@@ -24,7 +26,19 @@ def upload_file_to_gcs(bucket_name, file, destination_blob_name):
     blob.upload_from_file(file,rewind=True)
     return blob.public_url
 
+def upload_file_to_s3(bucket_name, file_obj, destination_key, make_public=True):
+    """
+    Upload file object to AWS S3
+    """
+    # Upload directly from file-like object
+    constants.s3.upload_fileobj(file_obj, bucket_name, destination_key)
 
+    if make_public:
+        constants.s3.put_object_acl(ACL="public-read", Bucket=bucket_name, Key=destination_key)
+        return f"https://{bucket_name}.s3.ap-south-1.amazonaws.com/{destination_key}"
+    else:
+        return f"s3://{bucket_name}/{destination_key}"
+    
 def upload_file(file_obj,doc_name,subfolder,type,user_id):
     if machine=="local":
         os.makedirs(subfolder, exist_ok=True)
@@ -35,7 +49,7 @@ def upload_file(file_obj,doc_name,subfolder,type,user_id):
         return file_path
     else:
         file_path = f"{subfolder}/{type}_{user_id}_{doc_name}"
-        blob_path = None #upload_file_to_gcs(bucket_name, file_obj,file_path)
+        blob_path = upload_file_to_gcs(bucket_name, file_obj,file_path)
         return blob_path
     
 def execute_query(cursor,query,params=None,machine=None):
